@@ -21,14 +21,14 @@ return Class.$factory('tabs', {
             currentIndex: 0,
             event: 'click'
         }, opt || {});
-
+        console.log(12333);
         this.init();
     },
 
     init: function(){
         var self = this, opts = self.options;
 
-        self.doms = $(opts.selecter, opts.dom);
+        self.doms = $(opts.selector, opts.dom);
         self.initTargets();
         self.initEvent();
         self.to(opts.currentIndex);
@@ -60,7 +60,9 @@ return Class.$factory('tabs', {
         var self = this, opts = self.options, currentClassName = opts.currentClassName;
 
         self.doms.each(function(index, item){
+            console.log(item);
             self.o2s(this, opts.event, function(){
+                console.log(self.targets);
                 $.each(self.targets, function(){
                     $(this).hide();
                 });
