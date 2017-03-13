@@ -5,9 +5,9 @@ Tabs
 
 * dom：指定tabs的父级元素
 * selector: 指定一个选择表达式，dom下所有符合该表达式的元素将会被收集,默认为 '> *'
-* targetAttr: 指定收集target id的属性，默认为data-target
+* target: 指定一个查找target的函数
 * currentClassName: 当前被选中的tab的className
-* currentIndex: 指定一个当前索引
+* current: 指定一个当前索引
 * event: 指定一个触发切换的事件，默认为click，可以指定mouseover等
 
 ###Event:
@@ -17,7 +17,6 @@ Tabs
 ###Api
 
 * to(index)：切换至某一项
-* refresh(): 当tabs结构有改动时，可执行refresh方法，进行刷新，重新初始化
 
 
 ###Example

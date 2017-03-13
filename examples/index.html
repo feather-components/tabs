@@ -11,9 +11,9 @@
 
 <body>
 <div id="tab-btns">
-    <a href="#tab1" data-target="tab1">tab1</a>
-    <a href="#tab2" data-target="tab2">tab2</a>
-    <a href="#tab3" data-target="tab3">tab3</a>
+    <a href="#tab1" data-target="#tab1">tab1</a>
+    <a href="#tab2" data-target="#tab2">tab2</a>
+    <a href="#tab3" data-target="#tab3">tab3</a>
 </div>
 
 <div id="tab1"></div>
@@ -21,7 +21,17 @@
 <div id="tab3"></div>
 
 <script>
-$('#tab-btns').tabs();
+$('#tab-btns').on('tabs:switch', function(event, index){
+    console.log(index);
+}).tabs();
+
+
+
+setTimeout(function(){
+
+    $('<a href="#tab4" data-target="#tab4">1233</a>').appendTo('#tab-btns');
+    $('#tab-btns').tabs('destroy');
+}, 3000);
 </script>
 </body>
 </html>

@@ -12,85 +12,68 @@ if(typeof define == 'function' && define.amd){
 }
 })(function($, Class){
 return Class.$factory('tabs', {
-    initialize: function(opt){
-        this.options = $.extend({
+    initialize: function(options){
+        var self = this;
+        options = self.options = $.extend({
             dom: null,
             selector: '> *',
-            targetAttr: 'data-target',
-            currentClassNameName: '',
-            currentIndex: 0,
+            target: function(index){
+                return $($(this).data('target'));
+            },
+            currentClassName: '',
+            current: 0,
             event: 'click'
-        }, opt || {});
-        console.log(12333);
-        this.init();
-    },
+        }, options || {});
 
-    init: function(){
-        var self = this, opts = self.options;
-
-        self.doms = $(opts.selector, opts.dom);
-        self.initTargets();
+        self.$dom = $(options.dom);
         self.initEvent();
-        self.to(opts.currentIndex);
+        self.to(options.current);
     },
 
-    refresh: function(){
-        this.releaseDoms();
-        this.init();
-    },
-
-    releaseDoms: function(){
-        var self = this;
-
-        self.doms && self.ofs(self.doms, self.options.event);
-        self.targets.length = 0;
-    },
-
-    initTargets: function(){
-        var self = this, attr = self.options.targetAttr;
-
-        self.targets = [];
-
-        self.doms.each(function(){
-            self.targets.push(document.getElementById($(this).attr(attr)));
-        });
-    },
-    
     initEvent: function(){
-        var self = this, opts = self.options, currentClassName = opts.currentClassName;
+        var self = this, options = self.options;
 
-        self.doms.each(function(index, item){
-            console.log(item);
-            self.o2s(this, opts.event, function(){
-                console.log(self.targets);
-                $.each(self.targets, function(){
-                    $(this).hide();
-                });
-
-                self.targets[index] && $(self.targets[index]).show();
-
-                if(currentClassName){
-                    self.doms.removeClass(currentClassName);
-                    $(this).addClass(currentClassName);
-                }
-
-                self.trigger('switch', index);
-                return false;
-            });
+        self.o2s(self.$dom, options.event, options.selector, function(){
+            self.to(this);
         });
     },
     
     to: function(index){
-        var self = this, index = index || 0;
+        var self = this, $elements = self.$(), options = self.options;
 
-        if(index > self.doms.length - 1) return false;
-        
-        self.t2s(self.doms.eq(index), self.options.event);
+        $elements.each(function(index){ 
+            options.currentClassName && $(this).removeClass(options.currentClassName);
+            $(self.target(index)).hide();
+        });
+
+        if(index && typeof index == 'object'){
+            $elements.each(function(i){
+                this === index && (index = i);
+            }).get(0);
+        }
+
+        if(typeof index != 'number'){
+            index = 0;
+        }
+
+        options.currentClassName && $elements.eq(index).addClass(options.currentClassName);
+        $(self.target(index)).show();
+
+        setTimeout(function(){
+            self.trigger('switch', index);
+        }, 0);
+    },
+
+    $: function(){
+        return this.$dom.find(this.options.selector);
+    },
+
+    target: function(index){
+        return this.options.target.call(this.$().get(index), index);
     },
 
     destroy: function(){
-        this.releaseDoms();
-        this.doms = null;
+        this.ofs(this.$dom, this.options.event);
     }
 });
 });
